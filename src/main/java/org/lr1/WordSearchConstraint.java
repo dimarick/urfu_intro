@@ -1,0 +1,53 @@
+package org.lr1;
+
+import org.lr1.WordGrid.GridLocation;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+public class WordSearchConstraint extends Constraint<String, List<GridLocation>> {
+    public WordSearchConstraint(List<String> words) {
+        super(words);
+    }
+
+    @Override
+    public boolean satisfied(Map<String, List<GridLocation>> assignment) {
+        // объединение всех GridLocations в один огромный список
+        List<GridLocation> allLocations = assignment.values().stream()
+                .flatMap(Collection::stream).collect(Collectors.toList());
+        // наличие дубликатов положений сетки означает наличие совпадения
+        Set<GridLocation> allLocationsSet = new HashSet<>(allLocations);
+        // если какие-либо повторяющиеся местоположения сетки найдены,
+        // значит, есть перекрытие
+        return allLocations.size() == allLocationsSet.size();
+    }
+
+    public static void main(String[] args) {
+        WordGrid grid = new WordGrid(9, 9);
+        List<String> words = List.of("MATTHEW", "JOE", "MARY", "SARAH", "SALLY");
+        // генерация доменов для всех слов
+        Map<String, List<List<GridLocation>>> domains = new HashMap<>();
+        for (String word : words) {
+            domains.put(word, grid.generateDomain(word));
+        }
+        CSP<String, List<GridLocation>> csp = new CSP<>(words, domains);
+        csp.addConstraint(new WordSearchConstraint(words));
+        Map<String, List<GridLocation>> solution = csp.backtrackingSearch();
+        if (solution == null) {
+            System.out.println("No solution found!");
+        } else {
+            Random random = new Random();
+            for (Entry<String, List<GridLocation>> item : solution.entrySet()) {
+                String word = item.getKey();
+                List<GridLocation> locations = item.getValue();
+                // в половине случаев случайным выбором — задом наперед
+                if (random.nextBoolean()) {
+                    Collections.reverse(locations);
+                }
+                grid.mark(word, locations);
+            }
+            System.out.println(grid);
+        }
+    }
+}
