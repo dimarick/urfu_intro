@@ -2,8 +2,8 @@ package org.lr1;
 
 import org.lr1.WordGrid.GridLocation;
 
+import java.io.*;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class WordSearchConstraint extends Constraint<String, List<GridLocation>> {
@@ -24,8 +24,8 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
     }
 
     public static void main(String[] args) {
-        WordGrid grid = new WordGrid(9, 9);
-        List<String> words = List.of("MATTHEW", "JOE", "MARY", "SARAH", "SALLY");
+        WordGrid grid = new WordGrid(50, 50);
+        List<String> words = getWords();
         // генерация доменов для всех слов
         Map<String, List<List<GridLocation>>> domains = new HashMap<>();
         for (String word : words) {
@@ -38,7 +38,9 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
             System.out.println("No solution found!");
         } else {
             Random random = new Random();
-            for (Entry<String, List<GridLocation>> item : solution.entrySet()) {
+            var entries = new ArrayList<>(solution.entrySet());
+            Collections.shuffle(entries);
+            for (var item : entries) {
                 String word = item.getKey();
                 List<GridLocation> locations = item.getValue();
                 // в половине случаев случайным выбором — задом наперед
@@ -48,6 +50,25 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
                 grid.mark(word, locations);
             }
             System.out.println(grid);
+        }
+    }
+
+    private static List<String> getWords() {
+        try(
+            var fileReader = new FileReader("./google-10000-english.txt");
+            var reader = new BufferedReader(fileReader)
+        ) {
+
+            var result = new ArrayList<String>();
+            for (var line = reader.readLine(); line != null; line = reader.readLine()) {
+                result.add(line.toUpperCase());
+            }
+
+            Collections.shuffle(result);
+
+            return result.subList(0, 200);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -48,9 +48,14 @@ public class WordGrid {
     }
 
     private final char ALPHABET_LENGTH = 26;
-    private final char FIRST_LETTER = 'A';
+    private final char FIRST_LETTER = 'a';
     private final int rows, columns;
     private char[][] grid;
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
 
     public WordGrid(int rows, int columns) {
         this.rows = rows;
@@ -79,7 +84,19 @@ public class WordGrid {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (char[] rowArray : grid) {
-            sb.append(rowArray);
+            for (var c : rowArray) {
+                if (c >= 'A' && c <= 'Z') {
+                    sb.append(ANSI_WHITE);
+                    sb.append(ANSI_BLACK_BACKGROUND);
+                    sb.append(c);
+                    sb.append(ANSI_RESET);
+                } else {
+                    sb.append(ANSI_BLACK);
+                    sb.append(c);
+                    sb.append(ANSI_RESET);
+                }
+                sb.append(' ');
+            }
             sb.append(System.lineSeparator());
         }
         return sb.toString();
