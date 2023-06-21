@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class WordGrid {
+
     public static class GridLocation {
         public final int row, column;
 
@@ -49,7 +50,9 @@ public class WordGrid {
 
     private final char ALPHABET_LENGTH = 26;
     private final char FIRST_LETTER = 'a';
+    private final char FIRST_LETTER_UPPER = 'A';
     private final int rows, columns;
+    private final boolean colors;
     private char[][] grid;
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -57,19 +60,24 @@ public class WordGrid {
     public static final String ANSI_WHITE = "\u001B[37m";
     public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
 
-    public WordGrid(int rows, int columns) {
+    public WordGrid(int rows, int columns, boolean colors) {
         this.rows = rows;
         this.columns = columns;
+        this.colors = colors;
         grid = new char[rows][columns];
         // инициализируем сетку случайными буквами
         Random random = new Random();
         for (int row = 0; row < rows; row++) {
             for (int column = 0; column < columns; column++) {
                 char randomLetter = (char) (random.nextInt(ALPHABET_LENGTH)
-                        + FIRST_LETTER);
+                        + (colors ? FIRST_LETTER : FIRST_LETTER_UPPER));
                 grid[row][column] = randomLetter;
             }
         }
+    }
+
+    public WordGrid(int rows, int columns) {
+        this(rows, columns, false);
     }
 
     public void mark(String word, List<GridLocation> locations) {
@@ -85,17 +93,21 @@ public class WordGrid {
         StringBuilder sb = new StringBuilder();
         for (char[] rowArray : grid) {
             for (var c : rowArray) {
-                if (c >= 'A' && c <= 'Z') {
-                    sb.append(ANSI_WHITE);
-                    sb.append(ANSI_BLACK_BACKGROUND);
-                    sb.append(c);
-                    sb.append(ANSI_RESET);
+                if (colors) {
+                    if (c >= 'A' && c <= 'Z') {
+                        sb.append(ANSI_WHITE);
+                        sb.append(ANSI_BLACK_BACKGROUND);
+                        sb.append(c);
+                        sb.append(ANSI_RESET);
+                    } else {
+                        sb.append(ANSI_BLACK);
+                        sb.append(c);
+                        sb.append(ANSI_RESET);
+                    }
+                    sb.append(' ');
                 } else {
-                    sb.append(ANSI_BLACK);
                     sb.append(c);
-                    sb.append(ANSI_RESET);
                 }
-                sb.append(' ');
             }
             sb.append(System.lineSeparator());
         }

@@ -24,7 +24,7 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
     }
 
     public static void main(String[] args) {
-        WordGrid grid = new WordGrid(50, 50);
+        WordGrid grid = new WordGrid(20, 20);
         List<String> words = getWords();
         // генерация доменов для всех слов
         Map<String, List<List<GridLocation>>> domains = new HashMap<>();
@@ -38,9 +38,7 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
             System.out.println("No solution found!");
         } else {
             Random random = new Random();
-            var entries = new ArrayList<>(solution.entrySet());
-            Collections.shuffle(entries);
-            for (var item : entries) {
+            for (var item : solution.entrySet()) {
                 String word = item.getKey();
                 List<GridLocation> locations = item.getValue();
                 // в половине случаев случайным выбором — задом наперед
