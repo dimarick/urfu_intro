@@ -4,7 +4,6 @@ import org.lr1.WordGrid.GridLocation;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class WordSearchConstraint extends Constraint<String, List<GridLocation>> {
     public WordSearchConstraint(List<String> words) {
@@ -15,7 +14,7 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
     public boolean satisfied(Map<String, List<GridLocation>> assignment) {
         // объединение всех GridLocations в один огромный список
         List<GridLocation> allLocations = assignment.values().stream()
-                .flatMap(Collection::stream).collect(Collectors.toList());
+                .flatMap(Collection::stream).toList();
         // наличие дубликатов положений сетки означает наличие совпадения
         Set<GridLocation> allLocationsSet = new HashSet<>(allLocations);
         // если какие-либо повторяющиеся местоположения сетки найдены,
@@ -24,7 +23,7 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
     }
 
     public static void main(String[] args) {
-        WordGrid grid = new WordGrid(20, 20);
+        WordGrid grid = new WordGrid(50, 50, true);
         List<String> words = getWords();
         // генерация доменов для всех слов
         Map<String, List<List<GridLocation>>> domains = new HashMap<>();

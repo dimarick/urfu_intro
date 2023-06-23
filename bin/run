@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mvn install compile exec:java -Dmaven.test.skip=true -Dexec.mainClass=org.lr1.WordSearchConstraint
