@@ -23,23 +23,16 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
     }
 
     public static void main(String[] args) {
-        WordGrid grid = new WordGrid(50, 50, true);
-        List<String> words = getWords();
-        // генерация доменов для всех слов
-        Map<String, List<List<GridLocation>>> domains = new HashMap<>();
-        for (String word : words) {
-            domains.put(word, grid.generateDomain(word));
-        }
-        CSP<String, List<GridLocation>> csp = new CSP<>(words, domains);
-        csp.addConstraint(new WordSearchConstraint(words));
-        Map<String, List<GridLocation>> solution = csp.backtrackingSearch();
+        var words = getWords();
+        var grid = new WordGrid(50, 50, true);
+        var solution = generateSolution(words, grid);
         if (solution == null) {
             System.out.println("No solution found!");
         } else {
-            Random random = new Random();
+            var random = new Random();
             for (var item : solution.entrySet()) {
-                String word = item.getKey();
-                List<GridLocation> locations = item.getValue();
+                var word = item.getKey();
+                var locations = item.getValue();
                 // в половине случаев случайным выбором — задом наперед
                 if (random.nextBoolean()) {
                     Collections.reverse(locations);
@@ -48,6 +41,20 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
             }
             System.out.println(grid);
         }
+    }
+
+    public static Map<String, List<GridLocation>> generateSolution(List<String> words, WordGrid grid)
+    {
+        // генерация доменов для всех слов
+        Map<String, List<List<GridLocation>>> domains = new HashMap<>();
+        for (String word : words) {
+            domains.put(word, grid.generateDomain(word));
+        }
+
+        var csp = new CSP<>(words, domains);
+        csp.addConstraint(new WordSearchConstraint(words));
+
+        return csp.backtrackingSearch();
     }
 
     private static List<String> getWords() {
