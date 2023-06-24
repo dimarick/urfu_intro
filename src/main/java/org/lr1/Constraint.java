@@ -13,5 +13,5 @@ public abstract class Constraint<V, D> {
     }
 
     // Необходимо переопределить в подклассах
-    public abstract boolean satisfied(Map<V, D> assignment);
+    public abstract boolean satisfied(Map<V, D> assignment, D value);
 }
