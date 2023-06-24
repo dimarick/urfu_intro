@@ -17,7 +17,7 @@ public class WordGrid {
         // автоматическое создание Eclipse
         @Override
         public int hashCode() {
-            final int prime = 31;
+            final var prime = 31;
             int result = 1;
             result = prime * result + column;
             result = prime * result + row;
@@ -53,7 +53,7 @@ public class WordGrid {
     private final char FIRST_LETTER_UPPER = 'A';
     private final int rows, columns;
     private final boolean colors;
-    private char[][] grid;
+    private final char[][] grid;
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -66,10 +66,10 @@ public class WordGrid {
         this.colors = colors;
         grid = new char[rows][columns];
         // инициализируем сетку случайными буквами
-        Random random = new Random();
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
-                char randomLetter = (char) (random.nextInt(ALPHABET_LENGTH)
+        var random = new Random();
+        for (var row = 0; row < rows; row++) {
+            for (var column = 0; column < columns; column++) {
+                var randomLetter = (char) (random.nextInt(ALPHABET_LENGTH)
                         + (colors ? FIRST_LETTER : FIRST_LETTER_UPPER));
                 grid[row][column] = randomLetter;
             }
@@ -81,8 +81,8 @@ public class WordGrid {
     }
 
     public void mark(String word, List<GridLocation> locations) {
-        for (int i = 0; i < word.length(); i++) {
-            GridLocation location = locations.get(i);
+        for (var i = 0; i < word.length(); i++) {
+            var location = locations.get(i);
             grid[location.row][location.column] = word.charAt(i);
         }
     }
@@ -90,8 +90,8 @@ public class WordGrid {
     // получаем красивую печатную версию сетки
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (char[] rowArray : grid) {
+        var sb = new StringBuilder();
+        for (var rowArray : grid) {
             for (var c : rowArray) {
                 if (colors) {
                     if (c >= 'A' && c <= 'Z') {
@@ -115,11 +115,11 @@ public class WordGrid {
     }
 
     public List<List<GridLocation>> generateDomain(String word) {
-        List<List<GridLocation>> domain = new ArrayList<>();
-        int length = word.length();
+        var domain = new ArrayList<List<GridLocation>>();
+        var length = word.length();
 
-        for (int row = 0; row < rows; row++) {
-            for (int column = 0; column < columns; column++) {
+        for (var row = 0; row < rows; row++) {
+            for (var column = 0; column < columns; column++) {
                 if (column + length <= columns) {
                     // слева направо
                     fillRight(domain, row, column, length);
@@ -142,17 +142,17 @@ public class WordGrid {
     }
 
     private void fillRight(List<List<GridLocation>> domain, int row, int column, int length) {
-        List<GridLocation> locations = new ArrayList<>();
-        for (int c = column; c < (column + length); c++) {
+        var locations = new ArrayList<GridLocation>();
+        for (var c = column; c < (column + length); c++) {
             locations.add(new GridLocation(row, c));
         }
         domain.add(locations);
     }
 
     private void fillDiagonalRight(List<List<GridLocation>> domain, int row, int column, int length) {
-        List<GridLocation> locations = new ArrayList<>();
+        var locations = new ArrayList<GridLocation>();
         int r = row;
-        for (int c = column; c < (column + length); c++) {
+        for (var c = column; c < (column + length); c++) {
             locations.add(new GridLocation(r, c));
             r++;
         }
@@ -162,8 +162,8 @@ public class WordGrid {
 
     private void fillDown(List<List<GridLocation>> domain, int row,
                           int column, int length) {
-        List<GridLocation> locations = new ArrayList<>();
-        for (int r = row; r < (row + length); r++) {
+        var locations = new ArrayList<GridLocation>();
+        for (var r = row; r < (row + length); r++) {
             locations.add(new GridLocation(r, column));
         }
         domain.add(locations);
@@ -171,9 +171,9 @@ public class WordGrid {
 
     private void fillDiagonalLeft(List<List<GridLocation>> domain,
                                   int row, int column, int length) {
-        List<GridLocation> locations = new ArrayList<>();
-        int c = column;
-        for (int r = row; r < (row + length); r++) {
+        var locations = new ArrayList<GridLocation>();
+        var c = column;
+        for (var r = row; r < (row + length); r++) {
             locations.add(new GridLocation(r, c));
             c--;
         }

@@ -13,10 +13,10 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
     @Override
     public boolean satisfied(Map<String, List<GridLocation>> assignment) {
         // объединение всех GridLocations в один огромный список
-        List<GridLocation> allLocations = assignment.values().stream()
+        var allLocations = assignment.values().stream()
                 .flatMap(Collection::stream).toList();
         // наличие дубликатов положений сетки означает наличие совпадения
-        Set<GridLocation> allLocationsSet = new HashSet<>(allLocations);
+        var allLocationsSet = new HashSet<>(allLocations);
         // если какие-либо повторяющиеся местоположения сетки найдены,
         // значит, есть перекрытие
         return allLocations.size() == allLocationsSet.size();
@@ -46,7 +46,7 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
     public static Map<String, List<GridLocation>> generateSolution(List<String> words, WordGrid grid)
     {
         // генерация доменов для всех слов
-        Map<String, List<List<GridLocation>>> domains = new HashMap<>();
+        var domains = new HashMap<String, List<List<GridLocation>>>();
         for (String word : words) {
             domains.put(word, grid.generateDomain(word));
         }
