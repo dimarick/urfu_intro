@@ -14,7 +14,6 @@ public class WordGrid {
             this.column = column;
         }
 
-        // автоматическое создание Eclipse
         @Override
         public int hashCode() {
             final var prime = 31;
@@ -24,7 +23,6 @@ public class WordGrid {
             return result;
         }
 
-        // автоматическое создание Eclipse
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {
