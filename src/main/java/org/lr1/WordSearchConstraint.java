@@ -10,16 +10,33 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
         super(words);
     }
 
+    HashSet<GridLocation> cache;
+    Map<String, List<GridLocation>> cachedAssignment;
+
     @Override
-    public boolean satisfied(Map<String, List<GridLocation>> assignment) {
-        // объединение всех GridLocations в один огромный список
-        var allLocations = assignment.values().stream()
-                .flatMap(Collection::stream).toList();
-        // наличие дубликатов положений сетки означает наличие совпадения
-        var allLocationsSet = new HashSet<>(allLocations);
-        // если какие-либо повторяющиеся местоположения сетки найдены,
-        // значит, есть перекрытие
-        return allLocations.size() == allLocationsSet.size();
+    public boolean satisfied(Map<String, List<GridLocation>> assignment, List<GridLocation> value) {
+        if (cachedAssignment != assignment) {
+            cache = null;
+            cachedAssignment = assignment;
+        }
+
+        if (cache == null) {
+            // объединение всех GridLocations в один огромный список
+            var allLocations = assignment.values().stream()
+                    .flatMap(Collection::stream).toList();
+            // наличие дубликатов положений сетки означает наличие совпадения
+            cache = new HashSet<>(allLocations);
+        }
+
+        for (var item : value) {
+            if (cache.contains(item)) {
+                return false;
+            }
+
+            cache.add(item);
+        }
+
+        return true;
     }
 
     public static void main(String[] args) {
@@ -70,7 +87,7 @@ public class WordSearchConstraint extends Constraint<String, List<GridLocation>>
 
             Collections.shuffle(result);
 
-            return result.subList(0, 200);
+            return result.subList(0, 220);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

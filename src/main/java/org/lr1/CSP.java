@@ -1,9 +1,6 @@
 package org.lr1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CSP<V, D> {
     private List<V> variables;
@@ -32,9 +29,9 @@ public class CSP<V, D> {
 
     // Проверяем, соответствует ли присваивание значения,
     // проверяя все ограничения для данной переменной
-    public boolean consistent(V variable, Map<V, D> assignment) {
+    public boolean consistent(V variable, Map<V, D> assignment, D value) {
         for (Constraint<V, D> constraint : constraints.get(variable)) {
-            if (!constraint.satisfied(assignment)) {
+            if (!constraint.satisfied(assignment, value)) {
                 return false;
             }
         }
@@ -53,12 +50,16 @@ public class CSP<V, D> {
                 !assignment.containsKey(v)).findFirst().get();
         // получить все возможные значения области определения
         // для первой переменной без присваивания
-        for (D value : domains.get(unassigned)) {
+        List<D> ds = domains.get(unassigned);
+
+        Collections.shuffle(ds);
+
+        for (D value : ds) {
             // мелкая копия присваивания, которую мы можем изменить
             Map<V, D> localAssignment = new HashMap<>(assignment);
-            localAssignment.put(unassigned, value);
             // если нет противоречий, продолжаем рекурсию
-            if (consistent(unassigned, localAssignment)) {
+            if (consistent(unassigned, assignment, value)) {
+                localAssignment.put(unassigned, value);
                 Map<V, D> result = backtrackingSearch(localAssignment);
                 // если результат не найден, заканчиваем возвраты
                 if (result != null) {
