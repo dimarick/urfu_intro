@@ -98,7 +98,7 @@ public class ExpressionsChecker {
         }
     }
 
-    public static TruthTable getTruthTable(LinkedHashMap<String, Boolean> variables, String expression) {
+    static TruthTable getTruthTable(LinkedHashMap<String, Boolean> variables, String expression) {
         var truthTable = new TruthTable(variables.size());
 
         for (var i = 0; i < truthTable.table.length; i++) {
@@ -115,7 +115,7 @@ public class ExpressionsChecker {
         return truthTable;
     }
 
-    public static boolean eval(Map<String, Boolean> variables, String currentToken, Tokenizer tokenizer, int minPriority) {
+    static boolean eval(Map<String, Boolean> variables, String currentToken, Tokenizer tokenizer, int minPriority) {
         var left = false;
 
         if (currentToken.equals("~")) {
