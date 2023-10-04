@@ -1,6 +1,5 @@
 package org.lr4;
 
-
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -236,5 +235,3 @@ public class ExpressionsChecker {
         return variables;
     }
 }
-
-
