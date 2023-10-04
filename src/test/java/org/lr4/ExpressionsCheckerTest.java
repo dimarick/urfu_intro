@@ -24,6 +24,8 @@ public class ExpressionsCheckerTest extends TestCase {
         assertEquals("10", getTruthTable("~~~a"));
         assertEquals("01", getTruthTable("(a)"));
         assertEquals("10", getTruthTable("~(a)"));
+        assertEquals("11", getTruthTable("~(a * 0)"));
+        assertEquals("00", getTruthTable("~a * 0"));
         assertEquals("0001", getTruthTable("a b"));
         assertEquals("0001", getTruthTable("(a b)"));
         assertEquals("0001", getTruthTable("a * b"));
