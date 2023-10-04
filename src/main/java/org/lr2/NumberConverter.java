@@ -1,6 +1,7 @@
 package org.lr2;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class NumberConverter {
 
@@ -8,8 +9,12 @@ public class NumberConverter {
     // В двоичном представлении чисел с плавающей точкой старший бит мантиссы всегда равен 1 и хранится неявно (IEEE 754)
     public static final int IMPLICIT_BITS = 1;
 
-    private static class Overflow {
+    public static class Overflow {
         int value = 0;
+    }
+
+    private static class Sign {
+        boolean positive = true;
     }
 
     public static void main(String[] args) {
@@ -67,9 +72,10 @@ public class NumberConverter {
     }
 
     private static String convertFractionToBase(String value, int fromBase, int toBase, Overflow overflowResult) {
-        final var input = fromChar(value.toCharArray());
+        final var sign = new Sign();
+        final var input = fromChar(value.toCharArray(), sign);
 
-        return new String(toChar(convertFractionToBase(input, fromBase, toBase, overflowResult)));
+        return new String(toChar(convertFractionToBase(input, fromBase, toBase, overflowResult), sign));
     }
 
     private static int[] convertFractionToBase(int[] input, int fromBase, int toBase, Overflow overflowResult) {
@@ -209,10 +215,11 @@ public class NumberConverter {
     }
 
     public static String convertIntToBase(String value, int fromBase, int toBase, Overflow overflow) {
-        final var input = fromChar(value);
+        final var sign = new Sign();
+        final var input = fromChar(value, sign);
         final var output = convertIntToBase(input, fromBase, toBase, overflow);
 
-        return new String(toChar(output));
+        return new String(toChar(output, sign));
     }
 
     public static int[] convertIntToBase(int[] value, int fromBase, int toBase) {
@@ -278,30 +285,48 @@ public class NumberConverter {
         }
     }
 
-    private static int[] fromChar(char[] value) {
-        var result = new int[value.length];
+    private static int[] fromChar(char[] value, Sign sign) {
+        var result = new int[value.length - (value[0] == '-' ? 1 : 0)];
+        var j = 0;
         for (var i = 0; i < value.length; i++) {
-            result[i] = fromChar(value[i]);
+            if (i == 0 && value[i] == '-') {
+                sign.positive = false;
+                continue;
+            }
+            result[j++] = fromChar(value[i]);
         }
 
         return result;
+    }
+
+    private static int[] fromChar(String value, Sign sign) {
+        return fromChar(value.toCharArray(), sign);
     }
 
     private static int[] fromChar(String value) {
-        return fromChar(value.toCharArray());
+        return fromChar(value.toCharArray(), new Sign());
     }
 
-    private static char[] toChar(int[] value, int maxLength) {
-        var result = new char[maxLength];
-        for (var i = 0; i < maxLength; i++) {
-            result[i] = toChar(value[i]);
+    private static char[] toChar(int[] value, int maxLength, Sign sign) {
+        var result = new char[maxLength + (sign.positive ? 0 : 1)];
+        var j = 0;
+        for (var i = 0; i < result.length; i++) {
+            if (i == 0 && !sign.positive) {
+                result[i] = '-';
+                continue;
+            }
+            result[i] = toChar(value[j++]);
         }
 
         return result;
     }
 
+    private static char[] toChar(int[] value, Sign sign) {
+        return toChar(value, value.length, sign);
+    }
+
     private static char[] toChar(int[] value) {
-        return toChar(value, value.length);
+        return toChar(value, new Sign());
     }
 
     private static int fromChar(char value) {

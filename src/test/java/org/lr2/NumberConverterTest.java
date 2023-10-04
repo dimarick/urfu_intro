@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 public class NumberConverterTest extends TestCase {
 
     public void testConvertIntToBase() {
+        assertEquals("-35E51C81", NumberConverter.convertIntToBase("-QUA741", 32, 16));
         assertEquals("35E51C81", NumberConverter.convertIntToBase("QUA741", 32, 16));
         assertEquals("35E51C81392043CCBB8DA3709B845F9A80B0A82BC4926DF7", NumberConverter.convertIntToBase("QUA74174G47J5RHMHN16S4BUD81C585F294RFN", 32, 16));
         assertEquals("QUA74174G47J5RHMHN16S4BUD81C585F294RFN", NumberConverter.convertIntToBase("35E51C81392043CCBB8DA3709B845F9A80B0A82BC4926DF7", 16, 32));
@@ -25,6 +26,7 @@ public class NumberConverterTest extends TestCase {
     }
 
     public void testConvertFloatToBase() {
+        assertEquals("-111.11111111", NumberConverter.convertFloatToBase("-21.22222", 3, 2));
         assertEquals("111.11111111", NumberConverter.convertFloatToBase("21.22222", 3, 2));
         assertEquals("6BCA.3902", NumberConverter.convertFloatToBase("QUA.741", 32, 16));
         assertEquals("0.9992", NumberConverter.convertFloatToBase("0.AAA", 11, 10));
