@@ -40,7 +40,7 @@ public class NumberConverter {
             System.out.println("Machine float format (4 + 8 bits): " + convertFloatToMachineRepresentation(number, fromBase, 3, 8));
         } else {
             System.out.println("Value: " + convertIntToBase(number, fromBase, toBase));
-            System.out.println("Machine float format (64 bits): " + convertIntToMachineRepresentation(number, fromBase, 64));
+            System.out.println("Machine integer format (64 bits): " + convertIntToMachineRepresentation(number, fromBase, 64));
         }
     }
 
