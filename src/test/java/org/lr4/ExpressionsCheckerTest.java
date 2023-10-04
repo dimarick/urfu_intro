@@ -16,6 +16,8 @@ public class ExpressionsCheckerTest extends TestCase {
     }
 
     public void testGetTruthTable() {
+        assertEquals("01001000", getTruthTable("(x2*x3)^x2^x1^(x1*x3)"));
+        assertEquals("01100000", getTruthTable("x2^x1^x2*x3^x1*x3"));
         assertEquals("01", getTruthTable("a"));
         assertEquals("10", getTruthTable("~a"));
         assertEquals("01", getTruthTable("~~a"));

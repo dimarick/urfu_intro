@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class ExpressionsChecker {
-    final private static List<String> operators = Arrays.asList("~", "^", "+", "*");
+    final private static List<String> operators = Arrays.asList("^", "+", "*", "~");
 
     static class TruthTable {
         boolean[] table;
@@ -76,11 +76,11 @@ public class ExpressionsChecker {
                 allowedVariables = variables;
             }
 
-            if (!allowedVariables.equals(variables)) {
+            if (!allowedVariables.keySet().equals(variables.keySet())) {
                 throw new RuntimeException("Переменные в выражении " + arg + " должно совпадать с переменными в остальных выражениях (" + allowedVariables + ")");
             }
 
-            var truthTable = getTruthTable(variables, arg);
+            var truthTable = getTruthTable(allowedVariables, arg);
 
             if (prevTruthTable == null) {
                 prevTruthTable = truthTable;
@@ -119,7 +119,7 @@ public class ExpressionsChecker {
         var left = false;
 
         if (currentToken.equals("~")) {
-            left = unaryOperator(eval(variables, tokenizer.nextToken(), tokenizer, minPriority), currentToken);
+            left = unaryOperator(eval(variables, tokenizer.nextToken(), tokenizer, operators.indexOf("~")), currentToken);
         }
 
         if (variables.containsKey(currentToken)) {
