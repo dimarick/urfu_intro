@@ -52,7 +52,7 @@ public class CSP<V, D> {
         // для первой переменной без присваивания
         List<D> ds = domains.get(unassigned);
 
-        Collections.shuffle(ds);
+//        Collections.shuffle(ds);
 
         for (D value : ds) {
             // мелкая копия присваивания, которую мы можем изменить
