@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class ExpressionsChecker {
-    final private static List<String> operators = Arrays.asList("^", "+", "*", "~");
+    final private static List<String> operators = Arrays.asList("==", "darr", "|", "^", "+", "*", "~");
 
     static class TruthTable {
         boolean[] table;
@@ -74,10 +74,10 @@ public class ExpressionsChecker {
             if (allowedVariables == null) {
                 allowedVariables = variables;
             }
-
-            if (!allowedVariables.keySet().equals(variables.keySet())) {
-                throw new RuntimeException("Переменные в выражении " + arg + " должно совпадать с переменными в остальных выражениях (" + allowedVariables + ")");
-            }
+//
+//            if (!allowedVariables.keySet().equals(variables.keySet())) {
+//                throw new RuntimeException("Переменные в выражении " + arg + " должно совпадать с переменными в остальных выражениях (" + allowedVariables + ")");
+//            }
 
             var truthTable = getTruthTable(allowedVariables, arg);
 
@@ -86,12 +86,12 @@ public class ExpressionsChecker {
             }
 
             if (!truthTable.equals(prevTruthTable)) {
-                throw new RuntimeException("Таблица истинности выражения " + arg + " " + truthTable + " не совпадает с таблицей истинности " + prevTruthTable);
+                throw new RuntimeException("Таблица истинности выражения " + arg + " " + truthTable + " не совпадает с таблицей истинности " + prevTruthTable + " выражения " + args[0]);
             }
         }
 
         if (prevTruthTable != null && args.length > 1) {
-            System.out.println("Все выражения, содержат переменные " + allowedVariables + " и имеют таблицу истинности " + prevTruthTable);
+            System.out.println("Все выражения, содержат переменные " + allowedVariables.keySet() + " и имеют таблицу истинности " + prevTruthTable);
         } else {
             System.out.println("Необходимо указать хотя бы два аргумента");
         }
@@ -216,6 +216,11 @@ public class ExpressionsChecker {
             case "*" -> left = left && right;
             case "+" -> left = left || right;
             case "^" -> left = left ^ right;
+            // штрих Шеффера
+            case "|" -> left = !(left && right);
+            // стрелка Пирса
+            case "darr" -> left = !(left || right);
+            case "==" -> left = left == right;
             default -> throw new RuntimeException("Unknown operator " + operator);
         }
 
@@ -228,7 +233,7 @@ public class ExpressionsChecker {
         var tokenizer = new StringTokenizer(expression, " ()~^+*", true);
         while (tokenizer.hasMoreTokens()) {
             var token = tokenizer.nextToken();
-            if (validVar.matcher(token).matches()) {
+            if (validVar.matcher(token).matches() && !operators.contains(token)) {
                 variables.put(token, false);
             }
         }

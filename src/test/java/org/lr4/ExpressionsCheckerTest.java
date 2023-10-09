@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 
 public class ExpressionsCheckerTest extends TestCase {
     public void testGetVars() {
+        assertEquals(createVars(new String[]{"a", "b"}, new Boolean[]{false, false}), ExpressionsChecker.getVars("a darr b"));
+        assertEquals(createVars(new String[]{"a", "b"}, new Boolean[]{false, false}), ExpressionsChecker.getVars("a | b"));
         assertEquals(createVars(new String[]{"a", "b"}, new Boolean[]{false, false}), ExpressionsChecker.getVars("a + b"));
         assertEquals(createVars(new String[]{"a", "b", "c"}, new Boolean[]{false, false, false}), ExpressionsChecker.getVars("a b c"));
         assertEquals(createVars(new String[]{"a", "b", "c", "d"}, new Boolean[]{false, false, false, false}), ExpressionsChecker.getVars("a ^ b + c d"));
@@ -16,6 +18,8 @@ public class ExpressionsCheckerTest extends TestCase {
     }
 
     public void testGetTruthTable() {
+        assertEquals("1000", getTruthTable("a darr b"));
+        assertEquals("1110", getTruthTable("a | b"));
         assertEquals("01001000", getTruthTable("(x2*x3)^x2^x1^(x1*x3)"));
         assertEquals("01100000", getTruthTable("x2^x1^x2*x3^x1*x3"));
         assertEquals("01", getTruthTable("a"));
