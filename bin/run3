@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mvn exec:java -Dmaven.test.skip=true -Dexec.mainClass=org.lr3.NumberSummator -Dexec.args="$*"

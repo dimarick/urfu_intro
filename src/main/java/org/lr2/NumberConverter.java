@@ -1,7 +1,6 @@
 package org.lr2;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 public class NumberConverter {
 
@@ -13,8 +12,8 @@ public class NumberConverter {
         int value = 0;
     }
 
-    private static class Sign {
-        boolean positive = true;
+    public static class Sign {
+        public boolean positive = true;
     }
 
     public static void main(String[] args) {
@@ -95,7 +94,7 @@ public class NumberConverter {
         return Arrays.stream(output).limit(output.length - 1).toArray();
     }
 
-    private static int add(int[] op1, int[] op2, int base) {
+    public static int add(int[] op1, int[] op2, int base) {
         var overflow = 0;
         for (var i = 0; i < op1.length; i++) {
             var op2Pos = op2.length - 1 - i;
@@ -275,7 +274,7 @@ public class NumberConverter {
         return overflow;
     }
 
-    private static char toChar(int value) {
+    public static char toChar(int value) {
         if (value > MAX_BASE) {
             throw new RuntimeException();
         } else if (value > 9) {
@@ -299,7 +298,7 @@ public class NumberConverter {
         return result;
     }
 
-    private static int[] fromChar(String value, Sign sign) {
+    public static int[] fromChar(String value, Sign sign) {
         return fromChar(value.toCharArray(), sign);
     }
 
@@ -325,7 +324,7 @@ public class NumberConverter {
         return toChar(value, value.length, sign);
     }
 
-    private static char[] toChar(int[] value) {
+    public static char[] toChar(int[] value) {
         return toChar(value, new Sign());
     }
 
